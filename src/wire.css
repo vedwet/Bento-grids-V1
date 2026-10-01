@@ -1,0 +1,108 @@
+/* ───────── Wireframe mode ─────────
+   A wireframe is the real design rendered with `.wf` on its frame, so every
+   curve, notch and card shape is identical. This file only recolours it:
+   images → blue, text → red bars, cards → yellow, nav/buttons → grey. */
+
+.frame.wf {
+  --wf-field: #ffffff;
+  --wf-image: #5b86dc;
+  --wf-image-line: #3f68bd;
+  --wf-head: #d9534f;
+  --wf-text: #d9534f;
+  --wf-card: #e9b830;
+  --wf-card-edge: #c99a17;
+  --wf-ui: #8e929c;
+  --wf-ui-ink: #5d616b;
+  --frame: var(--wf-field);
+  background: var(--wf-field);
+  color: transparent;
+}
+
+/* text → solid bars, one per line, following the real line breaks */
+.wf,
+.wf * {
+  color: transparent !important;
+  text-decoration-line: underline;
+  text-decoration-color: var(--wf-text);
+  text-decoration-thickness: 0.72em;
+  text-underline-offset: -0.74em;
+  text-decoration-skip-ink: none;
+  text-shadow: none !important;
+}
+.wf input::placeholder { color: transparent; }
+/* Bars are drawn per element; containers whose children have a smaller font
+   (headline lines holding pills, avatars, subtext) must not draw their own. */
+.wf :is(h1, .d2-line, .d3-line, .d5-line) { text-decoration-line: none; }
+.wf svg { color: var(--wf-ui-ink) !important; }
+.wf svg * { color: inherit !important; }
+.wf svg path[fill]:not([fill='none']) { fill: var(--wf-ui-ink); }
+
+/* images → blue shapes with a cross, keeping each image's own radius */
+.wf img {
+  object-position: -99999px 0 !important;
+  background-color: var(--wf-image) !important;
+  background-image:
+    linear-gradient(to top right, transparent calc(50% - 1px), var(--wf-image-line) 50%, transparent calc(50% + 1px)),
+    linear-gradient(to top left, transparent calc(50% - 1px), var(--wf-image-line) 50%, transparent calc(50% + 1px));
+  border-color: var(--wf-field) !important;
+  outline-color: var(--wf-field) !important;
+}
+
+/* small label in the middle of each main image */
+.wf :is(.d1-hero, .d1-side, .d2-meet, .d2-main, .d3-left, .d3-tall, .d4-visual, .d5-tall, .d5-strip)::before {
+  content: 'Image';
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 3;
+  font: 500 11px/1 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase;
+  color: #fff !important; text-decoration: none;
+  background: var(--wf-image-line); padding: 6px 10px; border-radius: 999px;
+}
+.wf .d3-left::before { top: 30%; }
+.wf .d4-visual::before { left: 62%; top: 40%; }
+
+/* overlays that only exist to tint photos */
+.wf :is(.d1-hero__tint, .d3-tall__shade, .d3-meet__img) { display: none; }
+.wf .d3-meet::after { display: none; }
+
+/* headlines a touch stronger */
+.wf :is(h1, h1 *) { --wf-text: var(--wf-head); }
+.wf .d5-glyph { color: var(--wf-head) !important; }
+
+/* info cards → yellow */
+.wf :is(
+  .d1-offer, .d1-info,
+  .d2-meet__glass, .d2-cal, .d2-team__card, .d2-stat,
+  .d3-quote__card, .d3-cases, .d3-mid, .d3-meet, .d3-ev__item,
+  .d4-research, .d4-cell, .d4-quote, .d4-card, .d4-peach,
+  .d5-tag, .d5-news
+) {
+  background: var(--wf-card) !important;
+  border-color: var(--wf-card-edge) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* nav, buttons, pills, toggles → grey */
+.wf :is(
+  .d1-logo, .d1-nav a, .d1-pill, .d1-chip, .d1-roundbtn,
+  .d2-pill, .d2-cta, .d2-cases, .d2-cases span, .d2-plus, .d2-cal__arrow, .d2-days, .d2-slot__b,
+  .d2-tags span, .d2-scroll, .d2-scroll i, .d2-stat__btn, .d2-tag,
+  .d3-signup, .d3-mid__btns span, .d3-socials span, .d3-ring, .d3-meet__tags span, .d3-toggle,
+  .d3-ev__icon, .d3-spark, .d3-dots i,
+  .d4-icon, .d4-products, .d4-btn, .d4-outline, .d4-chip, .d4-mini, .d4-research__ico, .d4-cell__grid i,
+  .d5-logo, .d5-links, .d5-nav__icons a, .d5-cta__pill, .d5-cta__circle, .d5-swatches i, .d5-tag b i,
+  .d5-news label
+) {
+  --wf-text: var(--wf-ui-ink);
+  background: var(--wf-ui) !important;
+  border-color: var(--wf-ui-ink) !important;
+  box-shadow: none !important;
+}
+.wf :is(.d2-day.is-on, .d2-slot.is-on .d2-slot__b) { background: var(--wf-ui-ink) !important; }
+.wf .d2-slot__b i, .wf .d3-toggle i, .wf .d4-mini i { background: var(--wf-field) !important; border-color: var(--wf-field) !important; }
+.wf .d5-news label { border-radius: 8px; padding: 6px 8px; }
+.wf .d5-tag__line path { stroke: var(--wf-ui-ink); }
+.wf .d5-tag__line circle { fill: var(--wf-ui-ink); }
+
+/* nav link text reads as UI, not copy */
+.wf :is(.d2-brand, .d3-links, .d4-nav, .d5-links) { --wf-text: var(--wf-ui-ink); }
+.wf .d3-links a, .wf .d4-nav a { --wf-text: var(--wf-ui-ink); }
